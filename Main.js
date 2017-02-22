@@ -154,7 +154,8 @@ async function mainLoop() {
           $c = getResult($x);
           $x = $x + 1;
         }
-        $betColor = $c;
+        if ($c == 'r') { $betColor = 'b'; }
+        if ($c == 'b') { $betColor = 'r'; }
     }
   }
   
