@@ -20,6 +20,7 @@ var $startTime = Date.now();
 function init() {
   $streakRequired = prompt("Enter streak required before betting: ", 3);
   $balance = $(".user-balance").html();
+  $origBalance = $balance;
   $toPlayWith = prompt("Enter balance to play with", $balance);
   $currentBet = Math.round($toPlayWith * Math.pow(0.5,  6));
   $bankEvery = prompt("How often to bank? (-1 for double money)",-1);
@@ -53,9 +54,10 @@ function injectUI() {
 }
 
 function updateUI() {
+  $balance = $(".user-balance").html();
   $("#JSBetUI-ToPlayWith").html("ToPlayWith: " + $toPlayWith);
   $("#JSBetUI-CurrentBet").html("CurrentBet: " + $currentBet);
-  $("#JSBetUI-Profit").html("Profit: " + ($toPlayWith - $origToPlaywith));
+  $("#JSBetUI-Profit").html("Profit: " + ($balance - $origBalance));
   $("#JSBetUI-CurrentBetTarget").html("Betting: " + $betColor);
   $("#JSBetUI-CurrentStreak").html("Streak: " + $currentStreak);
   $("#JSBetUI-Banked").html("Banked: " + $banked);
@@ -82,6 +84,7 @@ function placeBet(r) {
     $("#green_button > button").click();
     break;
   }
+  
 }
 
 function getLastResult() {
@@ -176,9 +179,15 @@ async function mainLoop() {
     }
     setBet($currentBet);
     console.log("Placing bet...");
+      
+    if( $("#red_button > button").attr("disabled") == "disabled" ) {
+      console.log("Spinning, waiting to bet.");
+      setTimeout(mainLoop,1500);
+      return;
+    }
     placeBet($betColor);
     $toPlayWith = $toPlayWith - $currentBet;
-    await sleep(5000);
+    await sleep(7000);
     console.log("Bet placed: " + $currentBet + " on " + $betColor);
     $betPlaced = true;
     setTimeout(mainLoop,1500);
@@ -228,4 +237,4 @@ async function mainLoop() {
     
 }
 
-init(); //
+init(); //-
